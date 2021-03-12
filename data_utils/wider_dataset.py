@@ -9,6 +9,8 @@ Created on Tue Nov 17 20:30:41 2020
 import cv2
 import numpy as np
 import torch
+# from .arraytools import *
+from torchvision.transforms import functional as F
 
 
 DIR_INPUT = 'data'
@@ -47,7 +49,7 @@ class WiderDataset(object):
         im = im.astype(np.float32)
         im /= 255.0
         
-#         im = F.to_tensor(im)
+        # im = F.to_tensor(im)
 
         num_objs = len(boxes)
 
@@ -82,4 +84,5 @@ class WiderDataset(object):
 
     def __len__(self):
         return len(self.image_list)
-    
+
+

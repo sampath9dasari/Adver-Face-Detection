@@ -31,7 +31,7 @@ def bbox_overlaps(boxes, query_boxes):
     return overlaps
 
 
-def image_eval(pred, gt, iou_thresh):
+def image_eval(pred, gt, iou_thresh=0.5):
     """ single image evaluation
     pred: Nx5
     gt: Nx4
@@ -139,7 +139,7 @@ def ElevenPointInterpolatedAP(rec, prec):
     rhoInterp = [i[1] for i in cc]
     return [ap, rhoInterp, recallValues, None]
 
-def evaluation(pred, gt_box, iou_thresh=0.3, interpolation_method = 'ElevenPoint'):
+def evaluation(pred, gt_box, iou_thresh=0.5, interpolation_method = 'ElevenPoint'):
 #     pred = get_preds(pred)
 #     norm_score(pred)
     TP_info = []
