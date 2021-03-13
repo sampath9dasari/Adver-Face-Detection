@@ -22,6 +22,7 @@ from torchvision.transforms import functional as F
 
 from data_utils.wider_dataset import *
 from data_utils.wider_eval import *
+from data_utils.arraytools import *
 from data_utils.data_read import *
 from model.model_utils import *
 from lib.utils import *
@@ -52,8 +53,8 @@ def model_eval(model, data_loader):
     model.eval()
 
     for images, targets in data_loader:
-        images = list(F.to_tensor(image) for image in images)
-        targets = [{k: v for k, v in t.items()} for t in targets]
+        # images = list(F.to_tensor(image) for image in images)
+        # targets = [{k: v for k, v in t.items()} for t in targets]
 
         with torch.no_grad():
             predictions = model(images)
@@ -65,3 +66,16 @@ def model_eval(model, data_loader):
     target_info = list(itertools.chain(*target_info))
 
     return prediction_info, target_info
+
+
+def predict(model, image):
+    img = [totensor(image)]
+
+    # print(len(img))
+    model.eval()
+
+    with torch.no_grad():
+        prediction = model(img)
+
+    return prediction
+

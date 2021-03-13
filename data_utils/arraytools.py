@@ -3,20 +3,21 @@ Functions to convert from one type to another type
 """
 import torch as t
 import numpy as np
+from torchvision.transforms import functional as F
 
 
 def tonumpy(data):
     if isinstance(data, np.ndarray):
         return data
     if isinstance(data, t.Tensor):
-        return data.cpu().numpy()
+        return data.cpu().numpy().transpose(1,2,0)
     if isinstance(data, t.autograd.Variable):
         return tonumpy(data.data)
 
 
 def totensor(data, cuda=False):
     if isinstance(data, np.ndarray):
-        tensor = t.from_numpy(data)
+        tensor = F.to_tensor(data)
     if isinstance(data, t.Tensor):
         tensor = data
     if isinstance(data, t.autograd.Variable):

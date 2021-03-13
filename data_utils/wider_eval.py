@@ -244,4 +244,5 @@ def PlotPrecisionRecallCurve(r, method='EveryPoint'):
     plt.title('Precision x Recall curve \nAP: %s' % (ap_str))
     plt.legend(shadow=True)
     plt.grid()
+    plt.show()
 

@@ -9,7 +9,7 @@ Created on Tue Nov 17 20:30:41 2020
 import cv2
 import numpy as np
 import torch
-# from .arraytools import *
+from .arraytools import *
 from torchvision.transforms import functional as F
 
 
@@ -49,7 +49,7 @@ class WiderDataset(object):
         im = im.astype(np.float32)
         im /= 255.0
         
-        # im = F.to_tensor(im)
+        im = totensor(im)
 
         num_objs = len(boxes)
 
