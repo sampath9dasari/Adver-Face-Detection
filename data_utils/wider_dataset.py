@@ -13,6 +13,7 @@ from .arraytools import *
 from torchvision.transforms import functional as F
 
 
+device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 DIR_INPUT = 'data'
 DIR_TRAIN_IMG = f'{DIR_INPUT}/WIDER_train/images'
 DIR_TRAIN_LABELS = f'{DIR_INPUT}/wider_face_split'
@@ -49,7 +50,7 @@ class WiderDataset(object):
         im = im.astype(np.float32)
         im /= 255.0
         
-        im = totensor(im)
+        im = totensor(im).to(device)
 
         num_objs = len(boxes)
 

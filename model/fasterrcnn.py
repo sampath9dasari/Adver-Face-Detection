@@ -1,18 +1,12 @@
 import pandas as pd
 import numpy as np
 import time
-from matplotlib import pyplot as plt
-import skimage as skimage
+from pathlib import Path
 
 import torch
 import torchvision
 
-import albumentations as A
-from albumentations.pytorch.transforms import ToTensorV2
-
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
-from torchvision.models.detection import FasterRCNN
-from torchvision.models.detection.rpn import AnchorGenerator
 
 import torch.nn as nn
 import torch as t
@@ -79,3 +73,51 @@ def predict(model, image):
 
     return prediction
 
+
+def train_epoch(model, dataloader, averager, optimizer):
+    model.train()
+    itr = 0
+    for images, targets in dataloader:
+        # images, targets = images.to(device), targets.to(device)
+        images = list(image.to(device) for image in images)
+        targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
+        loss_dict = model(images, targets)
+
+        losses = sum(loss for loss in loss_dict.values())
+        #         print(loss_dict)
+        loss_value = losses.item()
+
+        averager.send(loss_value)
+
+        if itr % 100 == 0:
+            print(f"Training Iteration #{itr} loss: {loss_value}")
+
+        optimizer.zero_grad()
+        losses.backward()
+        optimizer.step()
+
+
+def val_epoch(model, dataloader, averager):
+    # model.eval()
+    with torch.no_grad():
+        for images, targets in dataloader:
+            # images, targets = images.to(device), targets.to(device)
+            images = list(image.to(device) for image in images)
+            targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
+            loss_dict = model(images, targets)
+            # print(loss_dict)
+            losses = sum(loss for loss in loss_dict.values())
+            # print(loss_dict)
+            loss_value = losses.item()
+
+            averager.send(loss_value)
+
+
+
+def save_checkpoint(state, filename="checkpoint.pth", save_path="weights"):
+    # check if the save directory exists
+    if not Path(save_path).exists():
+        Path(save_path).mkdir()
+
+    save_path = Path(save_path, filename)
+    torch.save(state, str(save_path))
