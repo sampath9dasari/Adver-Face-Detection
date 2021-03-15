@@ -31,6 +31,8 @@ def wider_read(limit_images=None, train=True):
         for im_idx, im in enumerate(file_list[event_idx][0]):
             im_name = im[0][0]
             face_bbx = face_bbx_list[event_idx][0][im_idx][0]
+
+            # if len(face_bbx) == 0: continue
             #  print face_bbx.shape
 
             bboxes = []

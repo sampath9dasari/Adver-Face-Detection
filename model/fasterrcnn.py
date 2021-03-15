@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import time
+import sys
 from pathlib import Path
 
 import torch
@@ -74,27 +75,39 @@ def predict(model, image):
     return prediction
 
 
-def train_epoch(model, dataloader, averager, optimizer):
+def train_epoch(model, epoch, dataloader, averager, optimizer):
     model.train()
-    itr = 0
-    for images, targets in dataloader:
-        # images, targets = images.to(device), targets.to(device)
-        images = list(image.to(device) for image in images)
-        targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
-        loss_dict = model(images, targets)
+    itr = 1
+    step_time = time.time()
+    try:
+        for images, targets in dataloader:
+            # images, targets = images.to(device), targets.to(device)
 
-        losses = sum(loss for loss in loss_dict.values())
-        #         print(loss_dict)
-        loss_value = losses.item()
+            images = list(image.to(device) for image in images)
+            targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
+            loss_dict = model(images, targets)
 
-        averager.send(loss_value)
+            losses = sum(loss for loss in loss_dict.values())
+            #         print(loss_dict)
+            loss_value = losses.item()
 
-        if itr % 100 == 0:
-            print(f"Training Iteration #{itr} loss: {loss_value}")
+            averager.send(loss_value)
 
-        optimizer.zero_grad()
-        losses.backward()
-        optimizer.step()
+            if itr % 100 == 0:
+                update_time = time.time()
+                print(f"Epoch #1{epoch} | Training Iteration #{itr} loss: {loss_value} | Time elapsed: {(update_time - step_time)/60:.2f} minutes")
+                step_time = update_time
+
+            itr += 1
+
+            optimizer.zero_grad()
+            losses.backward()
+            optimizer.step()
+
+    except:
+        e = sys.exc_info()[0]
+        print(e)
+        return e
 
 
 def val_epoch(model, dataloader, averager):
@@ -113,11 +126,3 @@ def val_epoch(model, dataloader, averager):
             averager.send(loss_value)
 
 
-
-def save_checkpoint(state, filename="checkpoint.pth", save_path="weights"):
-    # check if the save directory exists
-    if not Path(save_path).exists():
-        Path(save_path).mkdir()
-
-    save_path = Path(save_path, filename)
-    torch.save(state, str(save_path))

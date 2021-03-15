@@ -5,6 +5,8 @@ Created on Thu Nov 19 16:53:39 2020
 
 @author: susanthdasari
 """
+import torch
+from pathlib import Path
 
 class Averager:
     def __init__(self):
@@ -25,4 +27,21 @@ class Averager:
     def reset(self):
         self.current_total = 0.0
         self.iterations = 0.0
-        
+
+
+def save_checkpoint(state, filename="checkpoint.pth", save_path="saved_models"):
+    # check if the save directory exists
+    if not Path(save_path).exists():
+        Path(save_path).mkdir()
+
+    save_path = Path(save_path, filename)
+    torch.save(state, str(save_path))
+
+
+def save_losses(state, filename="checkpoint.pth", save_path="saved_models"):
+    # check if the save directory exists
+    if not Path(save_path).exists():
+        Path(save_path).mkdir()
+
+    save_path = Path(save_path, filename)
+    torch.save(state, str(save_path))
