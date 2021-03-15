@@ -42,10 +42,11 @@ def main():
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
     train_img_list, train_bboxes = wider_read(limit_images=args.limit_images)
-    val_img_list, val_bboxes = wider_read(limit_images=100, train=False)
+    test_img_list, test_bboxes = wider_read(limit_images=args.limit_images, train=False)
 
-    train_dataset = WiderDataset(train_img_list, train_bboxes)
-    test_dataset = WiderDataset(val_img_list, val_bboxes)
+    train_dataset = WiderDataset(train_img_list[:-100], train_bboxes[:-100])
+    val_dataset = WiderDataset(train_img_list[-100:], train_bboxes[-100:])
+    test_dataset = WiderDataset(test_img_list, test_bboxes)
 
     train_loader = DataLoader(train_dataset,
                               batch_size=args.batch_size,
@@ -53,6 +54,12 @@ def main():
                               num_workers=args.workers,
                               collate_fn=collate_fn
                               )
+    val_loader = DataLoader(val_dataset,
+                             batch_size=args.batch_size,
+                             shuffle=True,
+                             num_workers=args.workers,
+                             collate_fn=collate_fn
+                             )
     test_loader = DataLoader(test_dataset,
                              batch_size=args.batch_size,
                              shuffle=True,
@@ -110,7 +117,7 @@ def main():
             # End program execution
             return
 
-        val_epoch(model, test_loader, val_loss_hist)
+        val_epoch(model, val_loader, val_loss_hist)
         # update the learning rate
         if lr_scheduler is not None:
             lr_scheduler.step()

@@ -75,12 +75,12 @@ def predict(model, image):
     return prediction
 
 
-def train_epoch(model, epoch, dataloader, averager, optimizer):
+def train_epoch(model, epoch, train_dataloader, averager, optimizer):
     model.train()
     itr = 1
     step_time = time.time()
     try:
-        for images, targets in dataloader:
+        for images, targets in train_dataloader:
             # images, targets = images.to(device), targets.to(device)
 
             images = list(image.to(device) for image in images)
@@ -93,7 +93,7 @@ def train_epoch(model, epoch, dataloader, averager, optimizer):
 
             averager.send(loss_value)
 
-            if itr % 100 == 0:
+            if itr % 10 == 0:
                 update_time = time.time()
                 print(f"Epoch #1{epoch} | Training Iteration #{itr} loss: {loss_value} | Time elapsed: {(update_time - step_time)/60:.2f} minutes")
                 step_time = update_time
@@ -110,10 +110,10 @@ def train_epoch(model, epoch, dataloader, averager, optimizer):
         return e
 
 
-def val_epoch(model, dataloader, averager):
+def val_epoch(model, val_dataloader, averager):
     # model.eval()
     with torch.no_grad():
-        for images, targets in dataloader:
+        for images, targets in val_dataloader:
             # images, targets = images.to(device), targets.to(device)
             images = list(image.to(device) for image in images)
             targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
