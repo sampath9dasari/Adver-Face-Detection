@@ -2,7 +2,7 @@ import os
 
 import scipy.io as sio
 
-DIR_INPUT = 'data'
+DIR_INPUT = os.getcwd()+'/data'
 
 DIR_TRAIN_IMG = f'{DIR_INPUT}/WIDER_train/images'
 DIR_TRAIN_LABELS = f'{DIR_INPUT}/wider_face_split/wider_face_train.mat'

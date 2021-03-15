@@ -9,12 +9,13 @@ Created on Tue Nov 17 20:30:41 2020
 import cv2
 import numpy as np
 import torch
+import os
 from .arraytools import *
 from torchvision.transforms import functional as F
 
 
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-DIR_INPUT = 'data'
+DIR_INPUT = os.getcwd()+'/data'
 DIR_TRAIN_IMG = f'{DIR_INPUT}/WIDER_train/images'
 DIR_TRAIN_LABELS = f'{DIR_INPUT}/wider_face_split'
 

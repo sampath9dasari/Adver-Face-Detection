@@ -5,6 +5,7 @@ from PIL import Image
 import numpy as np
 import torchvision
 import art
+import os
 
 from model.fasterrcnn import *
 from lib.advattack import *
@@ -15,7 +16,7 @@ import os
 DEFAULT_CONFIDENCE_THRESHOLD = 0.5
 COLORS = np.random.uniform(0, 255, size=(2, 3))
 
-im = np.array(Image.open('demo/demo_image.jpg'))
+im = np.array(Image.open(os.getcwd()+'/demo/demo_image.jpg'))
 im = im.astype(np.float32)
 im /= 255.0
 DEMO_IMAGE = im
