@@ -23,8 +23,8 @@ from data_utils.wider_eval import *
 from data_utils.data_read import *
 from model.model_utils import *
 from model.fasterrcnn import *
-from lib.advattack import *
-from lib.utils import *
+from model.advattack import *
+from data_utils.utils import *
 
 # device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 wider_img_list, wider_bboxes = wider_read(150)

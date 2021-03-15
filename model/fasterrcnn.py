@@ -20,7 +20,7 @@ from data_utils.wider_eval import *
 from data_utils.arraytools import *
 from data_utils.data_read import *
 from model.model_utils import *
-from lib.utils import *
+from data_utils.utils import *
 
 
 def load_Faster_RCNN(backbone=None):

@@ -14,8 +14,8 @@ from data_utils.arraytools import *
 from data_utils.data_read import *
 from model.model_utils import *
 from model.fasterrcnn import *
-from lib.advattack import *
-from lib.utils import *
+from model.advattack import *
+from data_utils.utils import *
 
 
 def arguments():

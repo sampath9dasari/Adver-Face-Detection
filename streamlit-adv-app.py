@@ -8,8 +8,8 @@ import art
 import os
 
 from model.fasterrcnn import *
-from lib.advattack import *
-from lib.utils import *
+from model.advattack import *
+from data_utils.utils import *
 from data_utils.arraytools import *
 
 import os
