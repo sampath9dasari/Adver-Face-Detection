@@ -22,6 +22,7 @@ from data_utils.data_read import *
 from model.model_utils import *
 from data_utils.utils import *
 
+device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
 def load_Faster_RCNN(backbone=None):
     model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
@@ -95,7 +96,7 @@ def train_epoch(model, epoch, train_dataloader, averager, optimizer):
 
             if itr % 10 == 0:
                 update_time = time.time()
-                print(f"Epoch #1{epoch} | Training Iteration #{itr} loss: {loss_value} | Time elapsed: {(update_time - step_time)/60:.2f} minutes")
+                print(f"Epoch #{epoch} | Training Iteration #{itr} loss: {loss_value} | Time elapsed: {(update_time - step_time)/60:.2f} minutes")
                 step_time = update_time
 
             itr += 1
@@ -103,10 +104,17 @@ def train_epoch(model, epoch, train_dataloader, averager, optimizer):
             optimizer.zero_grad()
             losses.backward()
             optimizer.step()
+            
+            del images, targets
+#             images = list(image.to('cpu') for image in images)
+#             targets = [{k: v.to('cpu') for k, v in t.items()} for t in targets]
+#             torch.cuda.empty_cache()
+#             model.to(device)
 
-    except:
-        e = sys.exc_info()[0]
+    except Exception() as e:
         print(e)
+        e2 = sys.exc_info()[0]
+        print(e2)
         return e
 
 

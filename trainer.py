@@ -4,6 +4,7 @@ import time
 from pathlib import Path
 from datetime import datetime, date
 import json
+import sys
 
 import os
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
@@ -17,6 +18,7 @@ from model.fasterrcnn import *
 from model.advattack import *
 from data_utils.utils import *
 
+torch.cuda.empty_cache()
 
 def arguments():
     parser = argparse.ArgumentParser()
@@ -97,13 +99,23 @@ def main():
     model.train()
     print('Model training started')
     for epoch in range(args.start_epoch, args.epochs):
+        
+#         torch.cuda.empty_cache()
+#         model.to(device)
+        
         train_loss_hist.reset()
         val_loss_hist.reset()
         #     print(epoch)
         try:
             train_epoch(model, epoch, train_loader, train_loss_hist, optimizer)
 
-        except:
+        except Exception() as e:
+            print()
+            print()
+            print(e)
+            print()
+            print()
+            print("Testing")
             epoch_time = time.time()
             print("Error block")
             print(f"Epoch Time elapsed: {(epoch_time - step_time) / 60:.2f} minutes")
@@ -113,7 +125,8 @@ def main():
                 'model': model.state_dict(),
                 'optimizer': optimizer.state_dict()
             }, filename=f"fasterrcnn_resnet18_checkpoint_{epoch+1}.pth")
-
+            
+            raise e2
             # End program execution
             return
 

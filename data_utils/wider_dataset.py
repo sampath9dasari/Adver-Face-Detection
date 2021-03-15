@@ -57,16 +57,25 @@ class WiderDataset(object):
 
 #         imshow(im, boxes)
 
+
     
         # convert everything into a torch.Tensor
         boxes = torch.as_tensor(boxes, dtype=torch.float32)
-
-        if len(boxes) == 0:
+        
+        # Calculate are with exception handling
+        if num_objs == 0:
+            print('zero area')
             area = 0
             area = torch.as_tensor(area, dtype=torch.float32)
         else:
             area = (boxes[:, 3] - boxes[:, 1]) * (boxes[:, 2] - boxes[:, 0])
             area = torch.as_tensor(area, dtype=torch.float32)
+        
+#         if area <= 0:
+#             print('Negative Area')
+#             print(image_name)
+#             print(boxes)
+
         
         # there is only one class
         labels = torch.ones((num_objs,), dtype=torch.int64)
