@@ -46,7 +46,7 @@ test_loader = DataLoader(test_dataset,
 
 model = load_Faster_RCNN(backbone='resnet18')
 
-model.load_state_dict(torch.load('./saved_models/fasterrcnn_resnet18_fpn3.pth'))
+model.load_state_dict(torch.load('./saved_models/fasterrcnn_resnet18_2021-03-24.pth'))
 
 # prediction_info, target_info = model_eval(model, test_loader)
 #

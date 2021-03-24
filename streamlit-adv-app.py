@@ -82,7 +82,7 @@ def predict_lit_adv(image):
 def adv_attack_lit(image):
     st.write('cache miss adv attack')
     model = load_Faster_RCNN(backbone='resnet18')
-    model.load_state_dict(torch.load('./saved_models/fasterrcnn_resnet18_fpn3.pth'))
+    model.load_state_dict(torch.load('./saved_models/fasterrcnn_resnet18_2021-03-24.pth'))
     detector = PyTorchFasterRCNN(model=model, clip_values=(0, 1), preprocessing=None)
     attack = ProjectedGradientDescent(detector, eps=0.01, eps_step=0.01, max_iter=2, verbose=True)
 
