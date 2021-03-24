@@ -97,7 +97,7 @@ def main():
     train_epoch_loss = {}
 
     model.train()
-    print('Model training started')
+    print('Model training started at ',start_time)
     for epoch in range(args.start_epoch, args.epochs):
         
 #         torch.cuda.empty_cache()
@@ -135,16 +135,16 @@ def main():
         if lr_scheduler is not None:
             lr_scheduler.step()
 
-        if epoch + 1 % args.save_every == 0:
+        if (epoch + 1) % args.save_every == 0:
             save_checkpoint({
                 'epoch': epoch,
                 'batch_size': train_loader.batch_size,
                 'model': model.state_dict(),
                 'optimizer': optimizer.state_dict()
-            }, filename=f"fasterrcnn_resnet18_checkpoint_{epoch+1}.pth")
+            }, filename=f"fasterrcnn_resnet18_checkpoint_{epoch}.pth")
 
         train_epoch_loss.update({epoch+1:train_loss_hist.value})
-        print(f"Epoch #{epoch+1} Train loss: {train_loss_hist.value} | Val loss: {val_loss_hist.value}")
+        print(f"Epoch #{epoch} Train loss: {train_loss_hist.value} | Val loss: {val_loss_hist.value}")
         epoch_time = time.time()
         print(f"Epoch Time elapsed: {(epoch_time - step_time) / 60:.2f} minutes")
         step_time = epoch_time
