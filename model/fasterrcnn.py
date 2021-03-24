@@ -106,6 +106,7 @@ def train_epoch(model, epoch, train_dataloader, averager, optimizer):
             optimizer.step()
             
             del images, targets
+#             torch.cuda.empty_cache()
 #             images = list(image.to('cpu') for image in images)
 #             targets = [{k: v.to('cpu') for k, v in t.items()} for t in targets]
 #             torch.cuda.empty_cache()
