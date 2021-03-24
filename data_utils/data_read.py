@@ -42,7 +42,7 @@ def wider_read(limit_images=None, train=True):
                 ymin = int(face_bbx[i][1])
                 xmax = int(face_bbx[i][2]) + xmin
                 ymax = int(face_bbx[i][3]) + ymin
-                if xmin != 0 and ymin != 0 and xmax != 0 and ymax != 0 and xmin != xmax and ymin != ymax:
+                if xmin != 0 and ymin != 0 and xmax != 0 and ymax != 0 and xmin < xmax and ymin < ymax:
                     bboxes.append((xmin, ymin, xmax, ymax))
 
             image_name = os.path.join(IMG_DIR, directory,
