@@ -1,4 +1,4 @@
-from art.attacks.evasion import ProjectedGradientDescent
+from art.attacks.evasion import ProjectedGradientDescent, FastGradientMethod
 from art.estimators.object_detection import PyTorchFasterRCNN
 
 def gen_adv_model(model):
