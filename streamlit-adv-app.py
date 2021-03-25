@@ -45,16 +45,16 @@ def annotate_image(
 
                 # print(image.shape, image.dtype)
 
-                cv2.rectangle(image, (startX, startY), (endX, endY), COLORS[1], 2)
+                cv2.rectangle(image, (startX, startY), (endX, endY), (0,255,0), 2)
 
     return image
 
 
-@st.cache(suppress_st_warning=True, hash_funcs={torchvision.models.detection.faster_rcnn.FasterRCNN: lambda _:None})
+@st.cache(suppress_st_warning=True, allow_output_mutation=True, hash_funcs={torchvision.models.detection.faster_rcnn.FasterRCNN: lambda _:None})
 def predict_lit_org(image):
     st.write('cache miss org')
     model = load_Faster_RCNN(backbone='resnet18')
-    model.load_state_dict(torch.load('./saved_models/fasterrcnn_resnet18_fpn3.pth'))
+    model.load_state_dict(torch.load('./saved_models/fasterrcnn_resnet18_2021-03-24.pth')['model'])
     img = [totensor(image)]
     model.eval()
 
@@ -64,11 +64,11 @@ def predict_lit_org(image):
     return prediction
 
 
-@st.cache(suppress_st_warning=True, hash_funcs={torchvision.models.detection.faster_rcnn.FasterRCNN: lambda _:None})
+@st.cache(suppress_st_warning=True, allow_output_mutation=True, hash_funcs={torchvision.models.detection.faster_rcnn.FasterRCNN: lambda _:None})
 def predict_lit_adv(image):
     st.write('cache miss adv')
     model = load_Faster_RCNN(backbone='resnet18')
-    model.load_state_dict(torch.load('./saved_models/fasterrcnn_resnet18_fpn3.pth'))
+    model.load_state_dict(torch.load('./saved_models/fasterrcnn_resnet18_2021-03-24.pth')['model'])
     img = [totensor(image)]
     model.eval()
 
@@ -78,13 +78,14 @@ def predict_lit_adv(image):
     return prediction
 
 
-@st.cache(suppress_st_warning=True)
+@st.cache(suppress_st_warning=True, allow_output_mutation=True)
 def adv_attack_lit(image):
     st.write('cache miss adv attack')
     model = load_Faster_RCNN(backbone='resnet18')
-    model.load_state_dict(torch.load('./saved_models/fasterrcnn_resnet18_2021-03-24.pth'))
+    model.load_state_dict(torch.load('./saved_models/fasterrcnn_resnet18_2021-03-24.pth')['model'])
     detector = PyTorchFasterRCNN(model=model, clip_values=(0, 1), preprocessing=None)
-    attack = ProjectedGradientDescent(detector, eps=0.01, eps_step=0.01, max_iter=2, verbose=True)
+    # attack = FastGradientMethod(estimator=detector, eps=0.02, eps_step=0.001)
+    attack = ProjectedGradientDescent(detector, eps=0.05, eps_step=0.001, max_iter=40, verbose=True)
 
     image_in_list = np.array([image])
     image_adv = attack.generate(x=image_in_list, y=None)
