@@ -94,9 +94,9 @@ def train_epoch(model, epoch, train_dataloader, averager, optimizer):
 
             averager.send(loss_value)
 
-            if itr % 10 == 0:
+            if itr % 500 == 0:
                 update_time = time.time()
-                print(f"Epoch #{epoch} | Training Iteration #{itr} loss: {loss_value} | Time elapsed: {(update_time - step_time)/60:.2f} minutes")
+                print(f"Epoch #{epoch} | Training Iteration #{itr} loss: {loss_value} | Time elapsed: {convert(update_time - step_time)}")
                 step_time = update_time
 
             itr += 1
@@ -105,8 +105,12 @@ def train_epoch(model, epoch, train_dataloader, averager, optimizer):
             losses.backward()
             optimizer.step()
             
-            del images, targets
-#             torch.cuda.empty_cache()
+            
+            images = list(image.detach() for image in images)
+            targets = [{k: v.detach() for k, v in t.items()} for t in targets]
+            images.clear()
+            targets.clear()
+            torch.cuda.empty_cache()
 #             images = list(image.to('cpu') for image in images)
 #             targets = [{k: v.to('cpu') for k, v in t.items()} for t in targets]
 #             torch.cuda.empty_cache()
@@ -133,5 +137,11 @@ def val_epoch(model, val_dataloader, averager):
             loss_value = losses.item()
 
             averager.send(loss_value)
+            
+            images = list(image.detach() for image in images)
+            targets = [{k: v.detach() for k, v in t.items()} for t in targets]
+            images.clear()
+            targets.clear()
+            torch.cuda.empty_cache()
 
 
