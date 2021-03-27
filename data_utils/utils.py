@@ -1,6 +1,7 @@
 
 from matplotlib import pyplot as plt
 import torch as t
+import time
 
 def imshow(img, bboxes=None):
     if isinstance(img, t.Tensor):
@@ -28,3 +29,6 @@ def imshow_th(img, predictions, threshold=0.7):
     box_filter = predictions[0]['scores'] > threshold
     boxes = predictions[0]['boxes'][box_filter]
     imshow(img, boxes)
+    
+def convert(seconds):
+    return time.strftime("%H:%M:%S", time.gmtime(seconds))
