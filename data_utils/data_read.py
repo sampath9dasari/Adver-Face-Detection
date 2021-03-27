@@ -25,6 +25,10 @@ def wider_read(limit_images=None, train=True):
     event_list = wider_raw.get('event_list')
     file_list = wider_raw.get('file_list')
     face_bbx_list = wider_raw.get('face_bbx_list')
+    blur_list = wider_raw.get('blur_label_list')
+    occl_list = wider_raw.get('occlusion_label_list')
+    invalid_list = wider_raw.get('invalid_label_list')
+    illum_list = wider_raw.get('illumination_label_list')
     img_count = 1
     for event_idx, event in enumerate(event_list):
         directory = event[0][0]
@@ -43,7 +47,13 @@ def wider_read(limit_images=None, train=True):
                 xmax = int(face_bbx[i][2]) + xmin
                 ymax = int(face_bbx[i][3]) + ymin
                 if xmin != 0 and ymin != 0 and xmax != 0 and ymax != 0 and xmin < xmax and ymin < ymax:
-                    bboxes.append((xmin, ymin, xmax, ymax))
+                    if train:
+                        bboxes.append((xmin, ymin, xmax, ymax))
+                    else:
+                        if occl_list[event_idx][0][im_idx][0][i] != 2 and invalid_list[event_idx][0][im_idx][0][i] != 1:
+                            bboxes.append((xmin, ymin, xmax, ymax))
+                        else:
+                            bboxes.append((xmin, ymin, xmax, ymax))
 
             image_name = os.path.join(IMG_DIR, directory,
                                       im_name + '.jpg')
