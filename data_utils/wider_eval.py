@@ -139,7 +139,7 @@ def ElevenPointInterpolatedAP(rec, prec):
     rhoInterp = [i[1] for i in cc]
     return [ap, rhoInterp, recallValues, None]
 
-def evaluation(pred, gt_box, iou_thresh=0.5, interpolation_method = 'ElevenPoint'):
+def evaluation(pred, gt_box, iou_thresh=0.5, interpolation_method = 'ElevenPoint', disable_bar=False):
 #     pred = get_preds(pred)
 #     norm_score(pred)
     TP_info = []
@@ -148,7 +148,7 @@ def evaluation(pred, gt_box, iou_thresh=0.5, interpolation_method = 'ElevenPoint
     # different setting
     count_face = 0
     # [hard, medium, easy]
-    pbar = tqdm.tqdm(range(len(pred)))
+    pbar = tqdm.tqdm(range(len(pred)), disable=disable_bar)
     for i in pbar:
         pbar.set_description('Processing ')
 #             pred_list = pred
