@@ -48,7 +48,7 @@ def wider_read(limit_images=None, train=True):
             image_name = os.path.join(IMG_DIR, directory,
                                       im_name + '.jpg')
             
-            if len(bboxes)==0: 
+            if len(bboxes)==0 or len(bboxes) > 500: 
 #                 print('No boxes')
                 continue
             #         print(im_name)
