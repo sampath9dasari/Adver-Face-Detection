@@ -76,7 +76,7 @@ def main():
     model.to(device)
     params = [p for p in model.parameters() if p.requires_grad]
     optimizer = torch.optim.SGD(params, lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
-    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=3, gamma=0.1)
+    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=4, gamma=0.1)
     # lr_scheduler = None
 
     print("Model built")
@@ -84,10 +84,10 @@ def main():
     if args.resume:
         checkpoint = torch.load(os.getcwd()+'/saved_models/'+args.resume)
         model.load_state_dict(checkpoint['model'])
-#         optimizer.load_state_dict(checkpoint['optimizer'])
+        optimizer.load_state_dict(checkpoint['optimizer'])
         # Set the start epoch if it has not been
-#         if not args.start_epoch:
-#             args.start_epoch = checkpoint['epoch']
+        if not args.start_epoch:
+            args.start_epoch = checkpoint['epoch']+1
         print('Model loaded from checkpoint')
 
 
@@ -155,7 +155,7 @@ def main():
     end_time = time.time()
     print(f"Total Time elapsed: {convert(end_time - start_time)}")
 
-    with open(f"results/train losses {date.today()}.json", "w") as outfile:
+    with open(f"results/train losses {date.today()} final.json", "w") as outfile:
         json.dump(train_epoch_loss, outfile)
 
     save_checkpoint({
@@ -163,8 +163,8 @@ def main():
         'batch_size': train_loader.batch_size,
         'model': model.state_dict(),
         'optimizer': optimizer.state_dict()
-    }, filename=f"fasterrcnn_resnet18_{date.today()}_fresh.pth")
-    print(f"Saved Final Model fasterrcnn_resnet18_{date.today()}_fresh.pth")
+    }, filename=f"fasterrcnn_resnet18_{date.today()}_final.pth")
+    print(f"Saved Final Model fasterrcnn_resnet18_{date.today()}_final.pth")
 
 
     # TEST SET METRICS
