@@ -219,6 +219,7 @@ def PlotPrecisionRecallCurve(r, method='EveryPoint'):
 
     plt.close()
     plt.figure(figsize=(16,6))
+    plt.plot(recall, precision, label='Precision')
 #     if showInterpolatedPrecision:
     if method == 'EveryPoint':
         plt.plot(mrec, mpre, '--r', label='Interpolated precision (every point)')
@@ -235,7 +236,6 @@ def PlotPrecisionRecallCurve(r, method='EveryPoint'):
                 nrec.append(r)
                 nprec.append(max([mpre[int(id)] for id in idxEq]))
         plt.plot(nrec, nprec, 'or', label='11-point interpolated precision')
-    plt.plot(recall, precision, label='Precision')
     plt.xlabel('recall')
     plt.ylabel('precision')
 #     if showAP:
