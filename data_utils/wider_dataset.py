@@ -51,7 +51,7 @@ class WiderDataset(object):
         im = im.astype(np.float32)
         im /= 255.0
         
-        im = totensor(im).to(device)
+        im = totensor(im)
 
         num_objs = len(boxes)
 
