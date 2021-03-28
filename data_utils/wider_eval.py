@@ -145,9 +145,9 @@ def evaluation(pred, gt_box, iou_thresh=0.5, interpolation_method = 'ElevenPoint
     TP_info = []
     FP_info = []
     scores_info = []
-    # different setting
+    
     count_face = 0
-    # [hard, medium, easy]
+#     print(len(pred))
     pbar = tqdm.tqdm(range(len(pred)), disable=disable_bar)
     for i in pbar:
         pbar.set_description('Processing ')

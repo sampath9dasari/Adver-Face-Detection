@@ -52,8 +52,8 @@ def wider_read(limit_images=None, train=True):
                     else:
                         if occl_list[event_idx][0][im_idx][0][i] != 2 and invalid_list[event_idx][0][im_idx][0][i] != 1:
                             bboxes.append((xmin, ymin, xmax, ymax))
-                        else:
-                            bboxes.append((xmin, ymin, xmax, ymax))
+#                         else:
+#                             bboxes.append((xmin, ymin, xmax, ymax))
 
             image_name = os.path.join(IMG_DIR, directory,
                                       im_name + '.jpg')
