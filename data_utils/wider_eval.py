@@ -63,9 +63,13 @@ def image_eval(pred, gt, iou_thresh=0.5):
             TP[h] = 1
             gt_list[max_idx] = 1
         else: FP[h] = 1
+    
+    if FP.sum() != 0 or TP.sum() != 0:
+        precision = TP.sum()/(FP.sum() + TP.sum())
+    else: precision = 0
             
             
-    return TP, FP, _scores
+    return TP, FP, _scores, precision
 
 
 def CalculateAveragePrecision(rec, prec):
@@ -145,6 +149,7 @@ def evaluation(pred, gt_box, iou_thresh=0.5, interpolation_method = 'ElevenPoint
     TP_info = []
     FP_info = []
     scores_info = []
+    ind_precision = []
     
     count_face = 0
 #     print(len(pred))
@@ -174,6 +179,7 @@ def evaluation(pred, gt_box, iou_thresh=0.5, interpolation_method = 'ElevenPoint
         FP_info.append(eval_results[1].copy())
         
         scores_info.append(eval_results[2].copy())
+        ind_precision.append(eval_results[3])
         
     TP_info = np.array(list(itertools.chain(*TP_info)))
     FP_info = np.array(list(itertools.chain(*FP_info)))
@@ -203,7 +209,8 @@ def evaluation(pred, gt_box, iou_thresh=0.5, interpolation_method = 'ElevenPoint
             'interpolated recall': mrec,
             'total positives': count_face,
             'total TP': np.sum(TP_info),
-            'total FP': np.sum(FP_info)
+            'total FP': np.sum(FP_info),
+            'image precision': ind_precision
         }
 
     return r
@@ -218,7 +225,7 @@ def PlotPrecisionRecallCurve(r, method='EveryPoint'):
     mrec = result['interpolated recall']
 
     plt.close()
-    plt.figure(figsize=(16,6))
+    plt.figure(figsize=(14,5))
     plt.plot(recall, precision, label='Precision')
 #     if showInterpolatedPrecision:
     if method == 'EveryPoint':
