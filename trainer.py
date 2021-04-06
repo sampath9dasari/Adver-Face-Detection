@@ -34,6 +34,8 @@ def arguments():
     parser.add_argument("--resume", default="")
     parser.add_argument("--debug", action="store_true")
     parser.add_argument("--limit-images", default=None, type=int)
+    parser.add_argument("--freeze-backbone", action="store_true")
+    parser.set_defaults(freeze_backbone=False)
 
     return parser.parse_args()
 
@@ -71,7 +73,7 @@ def main():
                              collate_fn=collate_fn
                              )
 
-    model = load_Faster_RCNN(backbone='resnet18')
+    model = load_Faster_RCNN(backbone='resnet18', freeze_backbone=args.freeze_backbone)
 
     model.to(device)
     params = [p for p in model.parameters() if p.requires_grad]

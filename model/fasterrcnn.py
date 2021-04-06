@@ -24,7 +24,7 @@ from data_utils.utils import *
 
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
-def load_Faster_RCNN(backbone=None):
+def load_Faster_RCNN(backbone=None, freeze_backbone=False):
     model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
 
     num_classes = 2  # 1 class (face) + background
@@ -38,6 +38,10 @@ def load_Faster_RCNN(backbone=None):
     # change backbone
     if backbone is not None:
         backbone = torchvision.models.detection.backbone_utils.resnet_fpn_backbone(backbone, True)
+        if freeze_backbone is True:
+            print("Backbone not training")
+            for param in backbone.parameters():
+                param.requires_grad = False
         model.backbone = backbone
 
     return model
