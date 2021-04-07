@@ -1,0 +1,38 @@
+Batch Size being used:  1
+Backbone resnet18 parameters frozen
+RPN parameters frozen
+Model built
+Model loaded from checkpoint  fasterrcnn_resnet18_checkpoint_2021-03-28_8_fresh.pth
+Model training started at  2021-04-06 03:15:34.594963
+Traceback (most recent call last):
+  File "/home/jupyter/Projects/Adver-Face-Detection/model/fasterrcnn.py", line 93, in train_epoch
+    for images, targets in train_dataloader:
+  File "/opt/conda/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 435, in __next__
+    data = self._next_data()
+  File "/opt/conda/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 475, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+  File "/opt/conda/lib/python3.7/site-packages/torch/utils/data/_utils/fetch.py", line 44, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/opt/conda/lib/python3.7/site-packages/torch/utils/data/_utils/fetch.py", line 44, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/jupyter/Projects/Adver-Face-Detection/data_utils/wider_dataset.py", line 49, in __getitem__
+    im = cv2.imread(image_name, cv2.IMREAD_COLOR)
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "trainer.py", line 117, in main
+    train_epoch(model, epoch, train_loader, train_loss_hist, optimizer)
+  File "/home/jupyter/Projects/Adver-Face-Detection/model/fasterrcnn.py", line 128, in train_epoch
+    except Exception() as e:
+TypeError: catching classes that do not inherit from BaseException is not allowed
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "trainer.py", line 202, in <module>
+    main()
+  File "trainer.py", line 119, in main
+    except Exception() as e:
+TypeError: catching classes that do not inherit from BaseException is not allowed

@@ -24,7 +24,7 @@ from data_utils.utils import *
 
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
-def load_Faster_RCNN(backbone=None, freeze_backbone=False):
+def load_Faster_RCNN(backbone=None, freeze_backbone=False, freeze_rpn=False):
     model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
 
     num_classes = 2  # 1 class (face) + background
@@ -37,12 +37,17 @@ def load_Faster_RCNN(backbone=None, freeze_backbone=False):
 
     # change backbone
     if backbone is not None:
-        backbone = torchvision.models.detection.backbone_utils.resnet_fpn_backbone(backbone, True)
+        tv_backbone = torchvision.models.detection.backbone_utils.resnet_fpn_backbone(backbone, True)
         if freeze_backbone is True:
-            print("Backbone not training")
-            for param in backbone.parameters():
+            print(f"Backbone {backbone} parameters frozen")
+            for param in tv_backbone.parameters():
                 param.requires_grad = False
-        model.backbone = backbone
+        model.backbone = tv_backbone
+    
+    if freeze_rpn is True:
+        print("RPN parameters frozen")
+        for param in model.rpn.parameters():
+            param.requires_grad = False
 
     return model
 
@@ -98,7 +103,7 @@ def train_epoch(model, epoch, train_dataloader, averager, optimizer):
 
             averager.send(loss_value)
 
-            if itr % 500 == 0:
+            if itr % 1000 == 0:
                 update_time = time.time()
                 print(f"Epoch #{epoch} | Training Iteration #{itr} loss: {loss_value} | Time elapsed: {convert(update_time - step_time)}")
                 step_time = update_time

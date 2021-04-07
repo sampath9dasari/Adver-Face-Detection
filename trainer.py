@@ -35,7 +35,9 @@ def arguments():
     parser.add_argument("--debug", action="store_true")
     parser.add_argument("--limit-images", default=None, type=int)
     parser.add_argument("--freeze-backbone", action="store_true")
+    parser.add_argument("--freeze-rpn", action="store_true")
     parser.set_defaults(freeze_backbone=False)
+    parser.set_defaults(freeze_rpn=False)
 
     return parser.parse_args()
 
@@ -61,24 +63,24 @@ def main():
                               collate_fn=collate_fn
                               )
     val_loader = DataLoader(val_dataset,
-                             batch_size=args.batch_size,
+                             batch_size=2,
                              shuffle=True,
                              num_workers=args.workers,
                              collate_fn=collate_fn
                              )
     test_loader = DataLoader(test_dataset,
-                             batch_size=8,
+                             batch_size=2,
                              shuffle=True,
                              num_workers=args.workers,
                              collate_fn=collate_fn
                              )
 
-    model = load_Faster_RCNN(backbone='resnet18', freeze_backbone=args.freeze_backbone)
+    model = load_Faster_RCNN(backbone='resnet18', freeze_backbone=args.freeze_backbone, freeze_rpn=args.freeze_rpn)
 
     model.to(device)
     params = [p for p in model.parameters() if p.requires_grad]
     optimizer = torch.optim.SGD(params, lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
-    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=4, gamma=0.1)
+    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=3, gamma=0.1)
     # lr_scheduler = None
 
     print("Model built")
@@ -86,11 +88,12 @@ def main():
     if args.resume:
         checkpoint = torch.load(os.getcwd()+'/saved_models/'+args.resume)
         model.load_state_dict(checkpoint['model'])
-        optimizer.load_state_dict(checkpoint['optimizer'])
+        if args.freeze_backbone is False and args.freeze_rpn is False:
+            optimizer.load_state_dict(checkpoint['optimizer'])
         # Set the start epoch if it has not been
         if not args.start_epoch:
             args.start_epoch = checkpoint['epoch']+1
-        print('Model loaded from checkpoint')
+        print('Model loaded from checkpoint ', args.resume)
 
 
     start_time = time.time()
@@ -114,12 +117,6 @@ def main():
             train_epoch(model, epoch, train_loader, train_loss_hist, optimizer)
 
         except Exception() as e:
-            print()
-            print()
-            print(e)
-            print()
-            print()
-            print("Testing")
             epoch_time = time.time()
             print("Error block")
             print(f"Epoch Time elapsed: {convert(epoch_time - step_time)}")
@@ -128,9 +125,9 @@ def main():
                 'batch_size': train_loader.batch_size,
                 'model': model.state_dict(),
                 'optimizer': optimizer.state_dict()
-            }, filename=f"fasterrcnn_resnet18_checkpoint_{date.today()}_{epoch}_fresh.pth")
+            }, filename=f"fasterrcnn_resnet18_checkpoint_{date.today()}_{epoch}.pth")
             
-            raise e2
+            raise e
             # End program execution
             return
 
@@ -145,8 +142,8 @@ def main():
                 'batch_size': train_loader.batch_size,
                 'model': model.state_dict(),
                 'optimizer': optimizer.state_dict()
-            }, filename=f"fasterrcnn_resnet18_checkpoint_{date.today()}_{epoch}_fresh.pth")
-            print(f"Saved Model - fasterrcnn_resnet18_checkpoint_{date.today()}_{epoch}_fresh.pth")
+            }, filename=f"fasterrcnn_resnet18_checkpoint_{date.today()}_{epoch}.pth")
+            print(f"Saved Model - fasterrcnn_resnet18_checkpoint_{date.today()}_{epoch}.pth")
 
         train_epoch_loss.update({epoch:train_loss_hist.value})
         print(f"Epoch #{epoch} Train loss: {train_loss_hist.value} | Val loss: {val_loss_hist.value}")
