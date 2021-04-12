@@ -88,8 +88,8 @@ def main():
     if args.resume:
         checkpoint = torch.load(os.getcwd()+'/saved_models/'+args.resume)
         model.load_state_dict(checkpoint['model'])
-        if args.freeze_backbone is False and args.freeze_rpn is False:
-            optimizer.load_state_dict(checkpoint['optimizer'])
+#         if args.freeze_backbone is False and args.freeze_rpn is False:
+#         optimizer.load_state_dict(checkpoint['optimizer'])
         # Set the start epoch if it has not been
         if not args.start_epoch:
             args.start_epoch = checkpoint['epoch']+1
