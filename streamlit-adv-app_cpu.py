@@ -59,7 +59,7 @@ def predict_lit_org(image):
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 #     st.write('cache miss org')
     model = load_Faster_RCNN(backbone='resnet18')
-    model.load_state_dict(torch.load(f"./saved_models/{SAVED_MODEL}")['model'])
+    model.load_state_dict(torch.load(f"./saved_models/{SAVED_MODEL}", map_location=torch.device('cpu'))['model'])
     
     model.to(device)
     img = [totensor(image.copy()).to(device)]
@@ -84,7 +84,7 @@ def predict_lit_adv(image):
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 #     st.write('cache miss adv')
     model = load_Faster_RCNN(backbone='resnet18')
-    model.load_state_dict(torch.load(f"./saved_models/{SAVED_MODEL}")['model'])
+    model.load_state_dict(torch.load(f"./saved_models/{SAVED_MODEL}", map_location=torch.device('cpu'))['model'])
     model.to(device)
     img = [totensor(image.copy()).to(device)]
     
@@ -107,13 +107,13 @@ def adv_attack_lit(image, max_eps=DEFAULT_EPS):
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 #     st.write('cache miss adv attack')
     model = load_Faster_RCNN(backbone='resnet18')
-    model.load_state_dict(torch.load(f"./saved_models/{SAVED_MODEL}")['model'])
+    model.load_state_dict(torch.load(f"./saved_models/{SAVED_MODEL}", map_location=torch.device('cpu'))['model'])
     
     model.to(device)
     
     detector = PyTorchFasterRCNN(model=model, clip_values=(0, 1), preprocessing=None)
     # attack = FastGradientMethod(estimator=detector, eps=0.02, eps_step=0.001)
-    attack = ProjectedGradientDescent(detector, eps=max_eps, eps_step=0.01, max_iter=5, verbose=True)
+    attack = ProjectedGradientDescent(detector, eps=max_eps, eps_step=0.01, max_iter=50, verbose=True)
 
     image_in_list = np.array([image])
     image_adv = attack.generate(x=image_in_list, y=None)
