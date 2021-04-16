@@ -113,7 +113,7 @@ def adv_attack_lit(image, max_eps=DEFAULT_EPS):
     
     detector = PyTorchFasterRCNN(model=model, clip_values=(0, 1), preprocessing=None)
     # attack = FastGradientMethod(estimator=detector, eps=0.02, eps_step=0.001)
-    attack = ProjectedGradientDescent(detector, eps=max_eps, eps_step=0.01, max_iter=5, verbose=True)
+    attack = ProjectedGradientDescent(detector, eps=max_eps, eps_step=0.01, max_iter=40, verbose=True)
 
     image_in_list = np.array([image])
     image_adv = attack.generate(x=image_in_list, y=None)
@@ -135,7 +135,7 @@ def adv_attack_lit(image, max_eps=DEFAULT_EPS):
 
 
 ### Main Program
-st.title("Face Detection Privacy")
+st.title("Face hider")
 
 
 
