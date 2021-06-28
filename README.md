@@ -1,1 +1,6 @@
 # Adver-Face-Detection
+
+
+With the advent of Neural Networks, Face Detection and Recognition has progressed aggressively towards achieving almost human performance. Social media has been one of the biggest consumers of face recognition tools and the biggest provider of facial data. The only way users can choose to preserve their facial privacy is to stop using any of the Social Media platforms completely.
+
+We propose a privacy mechanism that can be implemented on the user’s end and uses Adversarial Machine Learning to accomplish the goal of providing privacy. The privacy can be defined as a scenario where a user uploads his image to a social media platform and, his face will not be recognized either by the service provider or by someone else who might gain unfair access to the image. Adversarial Attacks are designed to manipulate machine learning models by deceiving them into making incorrect assessments. In this work, we show that these very attacks can be used as a privacy mechanism against Facial Detection deep neural network models. The attack will entail presenting the Deep Neural Network model with a sample perturbed with crafted noise. The modified sample aims to be indifferent from the original for a human eye, such that the utility of the image does not diminish.
