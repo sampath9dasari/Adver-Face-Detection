@@ -144,7 +144,7 @@ confidence_threshold = st.slider(
     "Confidence threshold", 0.0, 1.0, DEFAULT_CONFIDENCE_THRESHOLD, 0.05
 )
 max_eps = st.slider(
-    "EPS (Maximum Change in Image pixel)", 0.01, 0.09, DEFAULT_EPS, 0.02
+    "EPS (Maximum Change in Image pixel)", 0.01, 0.09, DEFAULT_EPS, 0.01
 )
 
 if img_file_buffer is not None:
